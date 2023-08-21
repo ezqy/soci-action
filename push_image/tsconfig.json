@@ -10,5 +10,5 @@
     "esModuleInterop": true, 
 
   },
-  "include": ["src/**/*"]
+  "exclude": ["__tests__", "lib", "node_modules"]
 }
