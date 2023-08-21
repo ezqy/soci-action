@@ -44,7 +44,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - uses: ezqy/soci-action/push_image@main
+      - uses: ezqy/soci-action/push-image@main
         with:
           user: AWS
           token: ${{ steps.token.outputs.token }}
