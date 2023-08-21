@@ -25,7 +25,7 @@ runs:
   - name: install soci
     run: |
       set -xoe pipefail
-      wget -P output.tar.gz ${file}
+      wget -O output.tar.gz ${file}
       tar -xvf output.tar.gz
       sudo mv soci /usr/local/bin
     shell: bash
