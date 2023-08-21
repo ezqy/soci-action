@@ -25,6 +25,9 @@ jobs:
         with:
           role-to-assume: ${{ github.event.inputs.iam-role-arn }}
           aws-region: ${{ github.event.inputs.aws-region }}
+          
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       - uses: ./setup
       - id: token
