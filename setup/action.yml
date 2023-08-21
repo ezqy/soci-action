@@ -2,17 +2,32 @@ name: Set up SOCI snapshotter
 inputs:
   version:
     required: false
-    default: "0.3.0"
+    default: 'latest'
 
 runs:
   using: "composite"
   steps:
+  - id: get-file-name
+    run: |
+      if [ "${version}" == "latest" ]; then
+        name=$(curl -s https://api.github.com/repos/awslabs/soci-snapshotter/releases/latest \
+        | jq '.assets[] | select(.browser_download_url | test("linux-amd64.tar.gz$"))' \
+        | jq -r .browser_download_url)
+        echo "name=${name}" >> $GITHUB_OUTPUT
+      else
+        name=$(echo "https://github.com/awslabs/soci-snapshotter/releases/download/v${version}/soci-snapshotter-${version}-linux-amd64.tar.gz")
+        echo "name=${name}" >> $GITHUB_OUTPUT
+      fi
+    env:
+      version: ${{ inputs.version }}
+
   - name: install soci
     run: |
       set -xoe pipefail
-      wget https://github.com/awslabs/soci-snapshotter/releases/download/v${version}/soci-snapshotter-${version}-linux-amd64.tar.gz
-      tar -xvf soci-snapshotter-${version}-linux-amd64.tar.gz
+      wget -P output.tar.gz ${file}
+      tar -xvf output.tar.gz
       sudo mv soci /usr/local/bin
     shell: bash
     env:
       version: ${{ inputs.version }}
+      file: ${{ steps.get-file-name.outputs.name }}
