@@ -2757,13 +2757,13 @@ const child_process_1 = __nccwpck_require__(81);
 async function run() {
     try {
         const user = core.getInput('user');
-        const password = core.getInput('password');
+        const token = core.getInput('token');
         const tag = core.getInput('tag');
         const dockerImagePath = core.getInput('docker-image-path');
         (0, child_process_1.execSync)(`sudo ctr i import ${dockerImagePath}`, { stdio: 'inherit' });
-        (0, child_process_1.execSync)(`sudo ctr i push --user "${user}:${password}" ${tag}`, { stdio: 'inherit' });
+        (0, child_process_1.execSync)(`sudo ctr i push --user "${user}:${token}" ${tag}`, { stdio: 'inherit' });
         (0, child_process_1.execSync)(`sudo soci create ${tag}`, { stdio: 'inherit' });
-        (0, child_process_1.execSync)(`sudo soci push --user "${user}:${password}" ${tag}`, { stdio: 'inherit' });
+        (0, child_process_1.execSync)(`sudo soci push --user "${user}:${token}" ${tag}`, { stdio: 'inherit' });
         core.setOutput('tag', tag);
     }
     catch (error) {
