@@ -1,0 +1,23 @@
+name: Push Seekable OCI index
+inputs:
+  user:
+    description: 'Docker Hub username'
+    required: true
+  token:
+    description: 'Docker Hub password'
+    required: true
+  tag:
+    description: 'Image tag'
+    required: true
+  docker-image-path:
+    description: 'Path to docker image tarball'
+    required: false
+    default: 'image.tar'
+outputs:
+  tag:
+    description: 'Image tag'
+    required: true
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

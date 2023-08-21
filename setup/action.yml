@@ -1,0 +1,18 @@
+name: Set up SOCI snapshotter 
+inputs:
+  version:
+    required: false
+    default: "0.3.0"
+
+runs:
+  using: "composite"
+  steps:
+  - name: install soci
+    run: |
+      set -xoe pipefail
+      wget https://github.com/awslabs/soci-snapshotter/releases/download/v${version}/soci-snapshotter-${version}-linux-amd64.tar.gz
+      tar -xvf soci-snapshotter-${version}-linux-amd64.tar.gz
+      sudo mv soci /usr/local/bin
+    shell: bash
+    env:
+      version: ${{ inputs.version }}
