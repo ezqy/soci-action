@@ -11,16 +11,37 @@ on:
         required: false
         default: 'ap-northeast-1'
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Configure AWS Credentials
+      - id: aws
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ github.event.inputs.iam-role-arn }}
           aws-region: ${{ github.event.inputs.aws-region }}
-          mask-aws-account-id: 'no'
+
       - uses: ./setup
-      - uses: ./push
+      - id: token
+        run: token=$(aws ecr get-login-password --region $AWS_REGION )
+
+      - uses: docker/build-push-action@v4
+        with:
+          outputs: type=docker,dest=image.tar
+          context: ./push_image/__tests__/data/dockerfile
+          tags: ${{ steps.aws.outputs.aws-account-id }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/soci-action:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - uses: ./push_image
+        with:
+          user: AWS
+          token: ${{ steps.token.outputs.token }}
+          tag: latest
+          docker-image-path: image.tar
+

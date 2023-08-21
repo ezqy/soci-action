@@ -6,7 +6,7 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
 }
 
 resource "aws_iam_role" "github_actions" {
-  name               = "github-actions-cicd-${random_string.random_id.id}"
+  name               = "github-actions-sosi-${random_string.random_id.id}"
   assume_role_policy = data.aws_iam_policy_document.github_actions.json
   description        = "IAM Role for GitHub Actions OIDC"
 }
