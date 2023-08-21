@@ -18,6 +18,7 @@ runs:
         name=$(echo "https://github.com/awslabs/soci-snapshotter/releases/download/v${version}/soci-snapshotter-${version}-linux-amd64.tar.gz")
         echo "name=${name}" >> $GITHUB_OUTPUT
       fi
+    shell: bash
     env:
       version: ${{ inputs.version }}
 
