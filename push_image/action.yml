@@ -16,7 +16,6 @@ inputs:
 outputs:
   tag:
     description: 'Image tag'
-    required: true
 
 runs:
   using: 'node16'
