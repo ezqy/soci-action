@@ -9,3 +9,5 @@ Download and install soci-snapshotter.
 
 ### push-image
 Push container image and SOCI index.
+
+### aws-ecr-build-push

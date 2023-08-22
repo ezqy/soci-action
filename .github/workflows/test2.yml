@@ -1,4 +1,4 @@
-name: test
+name: test2
 
 on:
   workflow_dispatch:
@@ -30,24 +30,8 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - uses: ezqy/soci-action/setup@main
-      - id: token
-        run: |
-          token=$(aws ecr get-login-password)
-          echo "::add-mask::$token"
-          echo "token=$token" >> $GITHUB_OUTPUT
-
-      - uses: docker/build-push-action@v4
+      - uses: ezqy/soci-action/aws-ecr-build-push@main
         with:
-          outputs: type=docker,dest=image.tar
-          context: .
-          tags: ${{ steps.aws.outputs.aws-account-id }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/soci-action:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - uses: ezqy/soci-action/push-image@main
-        with:
-          user: AWS
-          token: ${{ steps.token.outputs.token }}
           tag: ${{ steps.aws.outputs.aws-account-id }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/soci-action:latest
-          docker-image-path: image.tar
+          context: .
 

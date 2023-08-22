@@ -1,0 +1,33 @@
+name: SOCI build and push
+inputs:
+  tag:
+    description: 'Image tag'
+    required: true
+  context:
+    description: 'Path to docker image tar'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - id: get-token
+    run: |
+      token=$(aws ecr get-login-password)
+      echo "::add-mask::$token"
+      echo "token=$token" >> $GITHUB_OUTPUT
+    shell: bash
+
+  - uses: docker/build-push-action@v4
+    with:
+      outputs: type=docker,dest=image.tar
+      context: ${{ inputs.context }}
+      tags: ${{ inputs.tag }}
+      cache-from: type=gha
+      cache-to: type=gha,mode=max
+
+  - uses: ezqy/soci-action/push-image@v0.1.1
+    with:
+      user: AWS
+      token: ${{ steps.get-token.outputs.token }}
+      tag: ${{ inputs.tag }}
+      docker-image-path: image.tar
